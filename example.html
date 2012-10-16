@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jQuery Ajax Proxy</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	</head>
+	<body>
+
+		<h1>jQuery Ajax Proxy Sandbox</h1>
+
+		<form id="example_form">
+
+			<label>Custom Field 1</label>
+			<input type="text" value="" name="custom1" />
+
+			<label>Custom Field 2</label>
+			<input type="text" value="" name="custom2" />
+
+			<select name="method">
+				<option value="GET">GET</option>
+				<option value="POST">POST</option>
+				<option value="PUT">PUT</option>
+				<option value="DELETE">DELETE</option>
+			</select>
+
+			<button type="submit" value="Submit">Submit</button>
+
+			<h2>To see what is going on, look at the requests that are made in your console</h2>
+
+		</form>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script type="text/javascript" src="http://sandbox1.tysonlloydcadenhead.com/ajaxproxy/jquery-ajaxproxy.js"></script>
+		<script type="text/javascript">
+			
+			$(document).ready(function () {
+
+				$('#example_form').submit(function () {
+
+					$.ajax({
+						url: 'http://sandbox2.tysonlloydcadenhead.com/ajaxproxy/example.json',
+						requestProxy: 'http://sandbox2.tysonlloydcadenhead.com/ajaxproxy/exampleRequestProxy.html',
+						responseProxy: 'http://sandbox1.tysonlloydcadenhead.com/ajaxproxy/exampleResponseProxy.html',
+						data: {
+							custom1: $('input[name=custom1]').val(),
+							custom2: $('input[name=custom2]').val()
+						},
+						type: $('select[name=method]').val(),
+						success: function (data) {
+							console.log('Success', data);
+							$('body').append('<strong>Response:</strong> ' + data.message + '<br />');
+						},
+						error: function (data) {
+							console.log('Error', data);
+							$('body').append('There was an error because PUT and DELETE request are not supported by my static JSON file.<br />');
+						}
+					});
+
+					return false;
+
+				});
+
+			});
+			
+		</script>
+
+	</body>
+</html>
